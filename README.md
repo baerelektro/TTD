@@ -55,6 +55,8 @@ https://docs.soliditylang.org/en/latest/structure-of-a-contract.html
 
 # Компилятoры 
 
+https://docs.soliditylang.org/en/latest/grammar.html
+
 Синтактический анализ
 
 Парсинг
@@ -66,6 +68,7 @@ https://docs.soliditylang.org/en/latest/structure-of-a-contract.html
 Генерация кода
 
 # Типы Solidity
+
 https://docs.soliditylang.org/en/latest/types.html#value-types
 
 Булевы
