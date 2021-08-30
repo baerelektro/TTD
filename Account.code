@@ -13,7 +13,10 @@ SETGLOB 6
 ;; end constructor protection
 ; Decode input parameters
 ENDS
-; modifier checkPubKey
+; constructor Wallet
+GETGLOB 2
+NEQINT 0
+THROWIFNOT 101
 GETGLOB 5
 DUP
 ISNULL
@@ -25,22 +28,9 @@ IF
 ;; ==
 GETGLOB 2
 EQUAL
-THROWIFNOT 1103
-; constructor Account
+THROWIFNOT 102
 ACCEPT
-GETGLOB 5
-DUP
-ISNULL
-PUSHCONT {
-	DROP
-	PUSHINT 0
-}
-IF
-CALLREF {
-	CALL $setOwnership_internal_macro$
-}
-; end constructor Account
-; end modifier checkPubKey
+; end constructor Wallet
 CALLREF {
 	CALL $c7_to_c4$
 }
@@ -49,22 +39,9 @@ SETGLOB 7
 
 .macro sendTransaction
 DROP
-GETGLOB 1
-ISNULL
-IFREF {
-	CALL $c4_to_c7$
-}
 ; Decode input parameters
 ; Decode dest
-LDMSGADDRQ
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDMSGADDR
-}
-IFNOT
+LDMSGADDR
 ; Decode value
 LDUQ 128
 PUSHCONT {
@@ -85,25 +62,10 @@ PUSHCONT {
 	LDI 1
 }
 IFNOT
-; Decode flags
-LDUQ 8
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 8
-}
-IFNOT
-; Decode payload
-;; decode TvmCell
-LDREF
 ENDS
 ;; param: dest
 ;; param: value
 ;; param: bounce
-;; param: flags
-;; param: payload
 CALLREF {
 	CALL $sendTransaction_internal_macro$
 }
@@ -121,9 +83,7 @@ CALL $sendTransaction_internal_macro$
 ;; param: dest
 ;; param: value
 ;; param: bounce
-;; param: flags
-;; param: payload
-; modifier onlyOwner
+; modifier checkOwnerAndAccept
 GETGLOB 5
 DUP
 ISNULL
@@ -133,19 +93,18 @@ PUSHCONT {
 }
 IF
 ;; ==
-;; push identifier owner
-GETGLOB 10
+GETGLOB 2
 EQUAL
-THROWIFNOT 1101
-; function sendTransaction
+THROWIFNOT 100
 ACCEPT
+; function sendTransaction
 ;; transfer()
 ;; push identifier value
-PUSH S3
+PUSH S1
 ;; push identifier dest
-PUSH S5
+PUSH S3
 ;; push identifier bounce
-PUSH S4
+PUSH S2
 NEWC
 STSLICECONST x6_
 STI 1
@@ -157,110 +116,13 @@ STGRAMS
 PUSHINT 105
 STZEROES
 STSLICECONST 0
-STSLICECONST 1
-;; push identifier payload
-PUSH S1
-STREFR
-ENDC
-;; push identifier flags
-PUSH S2
-SENDRAWMSG
-; end function sendTransaction
-; end modifier onlyOwner
-BLKDROP 5
-
-.globl	setOwnership_internal
-.type	setOwnership_internal, @function
-CALL $setOwnership_internal_macro$
-
-.macro setOwnership_internal_macro
-;; param: newOwner
-; function setOwnership
-;; push identifier owner
-GETGLOB 10
-;; decl: oldOwner
-; expValue
-; end expValue
-;; push identifier newOwner
-PUSH S1
-; colValue
-SETGLOB 10
-; end colValue
-;; emit OwnershipTransferred
-NEWC
-PUSHSLICE xc0000000000000000000000002_
-STSLICER
 STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x536cd3f2
-;; previousOwner
-;; push identifier oldOwner
-PUSH S1
-STUR 256
-;; newOwner
-;; push identifier newOwner
-PUSH S2
-STUR 256
 ENDC
 PUSHINT 0
 SENDRAWMSG
-DROP
-; end function setOwnership
-DROP
-
-.macro transferOwnership
-DROP
-GETGLOB 1
-ISNULL
-IFREF {
-	CALL $c4_to_c7$
-}
-; Decode input parameters
-; Decode newOwner
-LDUQ 256
-PUSHCONT {
-	;; load next cell
-	LDREF
-	ENDS
-	CTOS
-	LDU 256
-}
-IFNOT
-ENDS
-;; param: newOwner
-; modifier onlyOwner
-GETGLOB 5
-DUP
-ISNULL
-PUSHCONT {
-	DROP
-	PUSHINT 0
-}
-IF
-;; ==
-;; push identifier owner
-GETGLOB 10
-EQUAL
-THROWIFNOT 1101
-; function transferOwnership
-;; push identifier newOwner
-DUP
-NEQINT 0
-THROWIFNOT 1102
-ACCEPT
-;; push identifier newOwner
-DUP
-CALLREF {
-	CALL $setOwnership_internal_macro$
-}
-; end function transferOwnership
-; end modifier onlyOwner
-DROP
-CALLREF {
-	CALL $c7_to_c4$
-}
-TRUE
-SETGLOB 7
+; end function sendTransaction
+; end modifier checkOwnerAndAccept
+BLKDROP 3
 
 .macro c7_to_c4
 GETGLOB 2
@@ -270,11 +132,6 @@ GETGLOB 3
 STUR 64
 GETGLOB 6
 STUR 1
-GETGLOB 10
-GETGLOB 11
-XCHG s2
-STU 256
-STU 256
 ENDC
 POP C4
 
@@ -284,10 +141,7 @@ CTOS        ; c4
 LDU 256      ; pubkey c4
 LDU 64      ; pubkey timestamp c4
 LDU 1       ; pubkey [timestamp] constructor_flag memory
-LDU 256
-PLDU 256
-SETGLOB 11
-SETGLOB 10
+ENDS
 TRUE
 SETGLOB 1   ; pubkey [timestamp] constructor_flag
 SETGLOB 6   ; pubkey [timestamp]
@@ -304,10 +158,7 @@ PUSHCONT {
 	LDU 256      ; pubkey c4
 	LDU 64      ; pubkey timestamp c4
 	LDU 1       ; pubkey [timestamp] constructor_flag memory
-	LDU 256
-	PLDU 256
-	SETGLOB 11
-	SETGLOB 10
+	ENDS
 	TRUE
 	SETGLOB 1   ; pubkey [timestamp] constructor_flag
 	SETGLOB 6   ; pubkey [timestamp]
@@ -316,22 +167,6 @@ PUSHCONT {
 }
 PUSHCONT {
 	PLDDICT   ; D
-	; init owner
-	PUSHINT 0
-	SETGLOB 10
-	; init _randomNonce
-	PUSHINT 1
-	PUSH S1
-	PUSHINT 64
-	DICTUGET
-	PUSHCONT {
-		PLDU 256
-	}
-	PUSHCONT {
-		PUSHINT 0
-	}
-	IFELSE
-	SETGLOB 11
 	; set contract pubkey
 	PUSHINT 0
 	SWAP
@@ -392,30 +227,14 @@ PUSHCONT {
 	LDSLICEX ; signatureSlice msgSlice
 	DUP      ; signatureSlice msgSlice msgSlice
 	HASHSU   ; signatureSlice msgSlice hashMsgSlice
-	SWAP  ; signatureSlice hashMsgSlice msgSlice
-	LDU 1 ; signatureSlice hashMsgSlice havePubkey msgSlice
-	SWAP  ; signatureSlice hashMsgSlice msgSlice havePubkey
-	PUSHCONT {
-		LDU 256       ; signatureSlice hashMsgSlice pubkey msgSlice
-		XCHG s3
-		SWAP
-	}
-	PUSHCONT {
-		XCHG s2
-		GETGLOB 2
-	}
-	IFELSE
+	ROT
+	GETGLOB 2
 	DUP
 	SETGLOB 5
 	CHKSIGNU      ; msgSlice isSigned
 	THROWIFNOT 40 ; msgSlice
 }
-PUSHCONT {
-	LDU 1      ; havePubkey msgSlice
-	SWAP       ; msgSlice havePubkey
-	THROWIF 58 ; msgSlice
-}
-IFELSE
+IF
 LDU 64                         ; timestamp msgSlice
 SWAP                           ; msgSlice timestamp
 CALL $replay_protection_macro$ ; msgSlice
@@ -433,81 +252,13 @@ GETGLOB 7
 ISNULL
 THROWIF 60
 
-.macro owner
-CALLREF {
-	CALL $c4_to_c7$
-}
-GETGLOB 10
-NEWC
-PUSHSLICE xc0000000000000000000000002_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST x9178e9bd
-PUSH S1
-STUR 256
-ENDC
-PUSHINT 0
-SENDRAWMSG
-TRUE
-SETGLOB 7
-
-.macro _randomNonce
-CALLREF {
-	CALL $c4_to_c7$
-}
-GETGLOB 11
-NEWC
-PUSHSLICE xc0000000000000000000000002_
-STSLICER
-STSLICECONST 0
-STSLICECONST 0
-STSLICECONST xbb53331f
-PUSH S1
-STUR 256
-ENDC
-PUSHINT 0
-SENDRAWMSG
-TRUE
-SETGLOB 7
-
 .macro public_function_selector
 DUP
-PUSHINT 995308319
-LEQ
-PUSHCONT {
-	DUP
-	PUSHINT 293136829
-	EQUAL
-	IFJMPREF {
-		CALL $owner$
-	}
-	DUP
-	PUSHINT 995308319
-	EQUAL
-	IFJMPREF {
-		CALL $_randomNonce$
-	}
+PUSHINT 828307765
+EQUAL
+IFJMPREF {
+	CALL $sendTransaction$
 }
-IFJMP
-DUP
-PUSHINT 1482330212
-LEQ
-PUSHCONT {
-	DUP
-	PUSHINT 1290691692
-	EQUAL
-	IFJMPREF {
-		CALL $sendTransaction$
-	}
-	DUP
-	PUSHINT 1482330212
-	EQUAL
-	IFJMPREF {
-		CALL $transferOwnership$
-	}
-}
-IFJMP
 DUP
 PUSHINT 1756716863
 EQUAL
