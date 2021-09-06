@@ -1,0 +1,341 @@
+.macro constructor
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+;; constructor protection
+GETGLOB 6
+THROWIF 51
+PUSHINT 1
+SETGLOB 6
+;; end constructor protection
+ENDS
+ACCEPT
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	_createZombie_internal
+.type	_createZombie_internal, @function
+CALL $_createZombie_internal_macro$
+
+.macro _createZombie_internal_macro
+;; param: _name
+;; param: _dna
+; function _createZombie
+; expValue
+;; fetch zombies
+GETGLOB 12
+; end expValue
+;; push identifier _name
+PUSH S2
+;; push identifier _dna
+PUSH S2
+TUPLE 2
+;; array.push(..)
+UNTUPLE 2
+NEWC
+PUSH S2
+STREFR
+PUSH S1
+STUR 256
+BLKDROP2 2, 1
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+; colValue
+SETGLOB 12
+; end colValue
+; end function _createZombie
+DROP2
+
+.globl	_generateRandomDna_internal
+.type	_generateRandomDna_internal, @function
+CALL $_generateRandomDna_internal_macro$
+
+.macro _generateRandomDna_internal_macro
+;; param: _str
+; function _generateRandomDna
+;; push identifier _str
+DUP
+CTOS
+SHA256U
+;; uint256
+;; decl: rand
+;; return
+;; push identifier rand
+DUP
+;; %
+;; push identifier dnaModulus
+GETGLOB 11
+MOD
+NIP
+; end function _generateRandomDna
+NIP
+
+.macro createRandomZombie
+DROP
+GETGLOB 1
+ISNULL
+IFREF {
+	CALL $c4_to_c7$
+}
+; Decode input parameters
+; Decode _name
+LDREF
+ENDS
+;; param: _name
+CALLREF {
+	CALL $createRandomZombie_internal_macro$
+}
+CALLREF {
+	CALL $c7_to_c4$
+}
+TRUE
+SETGLOB 7
+
+.globl	createRandomZombie_internal
+.type	createRandomZombie_internal, @function
+CALL $createRandomZombie_internal_macro$
+
+.macro createRandomZombie_internal_macro
+;; param: _name
+; function createRandomZombie
+;; push identifier _name
+DUP
+CALLREF {
+	CALL $_generateRandomDna_internal_macro$
+}
+;; decl: randDna
+;; push identifier _name
+PUSH S1
+;; push identifier randDna
+PUSH S1
+CALLREF {
+	CALL $_createZombie_internal_macro$
+}
+DROP
+; end function createRandomZombie
+DROP
+
+.macro c7_to_c4
+GETGLOB 2
+NEWC
+STU 256
+GETGLOB 3
+STUR 64
+GETGLOB 6
+STUR 1
+GETGLOB 10
+GETGLOB 11
+GETGLOB 12
+UNTUPLE 2
+REVERSE 5, 0
+STU 256
+STU 256
+STU 32
+STDICT
+ENDC
+POP C4
+
+.macro c4_to_c7
+PUSHROOT
+CTOS        ; c4
+LDU 256      ; pubkey c4
+LDU 64      ; pubkey timestamp c4
+LDU 1       ; pubkey [timestamp] constructor_flag memory
+LDU 256
+LDU 256
+LDU 32
+PLDDICT
+PAIR
+SETGLOB 12
+SETGLOB 11
+SETGLOB 10
+TRUE
+SETGLOB 1   ; pubkey [timestamp] constructor_flag
+SETGLOB 6   ; pubkey [timestamp]
+SETGLOB 3   ; D
+SETGLOB 2
+
+.macro c4_to_c7_with_init_storage
+PUSHROOT
+CTOS        ; c4
+DUP        ; c4 c4
+SBITS      ; c4 bits
+GTINT 1    ; c4 bits>1
+PUSHCONT {
+	LDU 256      ; pubkey c4
+	LDU 64      ; pubkey timestamp c4
+	LDU 1       ; pubkey [timestamp] constructor_flag memory
+	LDU 256
+	LDU 256
+	LDU 32
+	PLDDICT
+	PAIR
+	SETGLOB 12
+	SETGLOB 11
+	SETGLOB 10
+	TRUE
+	SETGLOB 1   ; pubkey [timestamp] constructor_flag
+	SETGLOB 6   ; pubkey [timestamp]
+	SETGLOB 3   ; D
+	SETGLOB 2
+}
+PUSHCONT {
+	PLDDICT   ; D
+	; init dnaDigits
+	PUSHINT 0
+	SETGLOB 10
+	; init dnaModulus
+	PUSHINT 0
+	SETGLOB 11
+	; init zombies
+	PUSHINT 0
+	NEWDICT
+	PAIR
+	SETGLOB 12
+	; set contract pubkey
+	PUSHINT 0
+	SWAP
+	PUSHINT 64
+	DICTUGET
+	THROWIFNOT 61
+	PLDU 256
+	SETGLOB 2
+	PUSHINT 0 ; timestamp
+	SETGLOB 3
+	PUSHINT 0 ; constructor_flag
+	SETGLOB 6
+	TRUE
+	SETGLOB 1
+	;; init state var: dnaDigits
+	PUSHINT 16
+	SETGLOB 10
+	;; init state var: dnaModulus
+	PUSHINT 10
+	;; **
+	;; push identifier dnaDigits
+	GETGLOB 10
+	DUP2
+	OR
+	THROWIFNOT 69
+	CALLREF {
+		CALL $__exp_macro$
+	}
+	SETGLOB 11
+}
+IFELSE
+
+.internal-alias :main_internal, 0
+.internal :main_internal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Function: main_internal
+;; param: contract_balance
+;; param: msg_balance
+;; param: int_msg_info
+;; param: msg_body_slice
+PUSHINT 0  ; main_external trans id
+PUSH S2
+CTOS
+PLDU 4
+MODPOW2 1
+IFRET
+PUSH S1    ; body
+SEMPTY     ; isEmpty
+IFRET
+PUSH S1 ; body
+LDU 32  ; funcId body'
+PUSH S1 ; funcId body' funcId
+IFNOTRET
+SWAP
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.internal-alias :main_external, -1
+.internal :main_external
+PUSHINT -1 ; main_external trans id
+PUSH S1
+CALLREF {
+	CALL $c4_to_c7_with_init_storage$
+}
+LDU 1 ; haveSign msgSlice
+SWAP
+PUSHCONT {
+	PUSHINT 512
+	LDSLICEX ; signatureSlice msgSlice
+	DUP      ; signatureSlice msgSlice msgSlice
+	HASHSU   ; signatureSlice msgSlice hashMsgSlice
+	ROT
+	GETGLOB 2
+	CHKSIGNU      ; msgSlice isSigned
+	THROWIFNOT 40 ; msgSlice
+}
+IF
+LDU 64                         ; timestamp msgSlice
+SWAP                           ; msgSlice timestamp
+CALL $replay_protection_macro$ ; msgSlice
+LDU  32 ; funcId body
+SWAP    ; body funcId
+CALLREF {
+	CALL $public_function_selector$
+}
+GETGLOB 7
+ISNULL
+THROWIF 60
+
+.macro zombies
+CALLREF {
+	CALL $c4_to_c7$
+}
+GETGLOB 12
+NEWC
+PUSHSLICE xc0000000000000000000000002_
+STSLICER
+STSLICECONST 0
+STSLICECONST 0
+STSLICECONST x9545002e
+PUSH S1
+UNPAIR
+XCHG s2
+STU 32
+STDICT
+ENDC
+PUSHINT 0
+SENDRAWMSG
+TRUE
+SETGLOB 7
+
+.macro public_function_selector
+DUP
+PUSHINT 356843566
+EQUAL
+IFJMPREF {
+	CALL $zombies$
+}
+DUP
+PUSHINT 1738823652
+EQUAL
+IFJMPREF {
+	CALL $createRandomZombie$
+}
+DUP
+PUSHINT 1756716863
+EQUAL
+IFJMPREF {
+	CALL $constructor$
+}
