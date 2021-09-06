@@ -29,5 +29,15 @@
 	"data": [
 	],
 	"events": [
+		{
+			"name": "NewZombie",
+			"inputs": [
+				{"name":"zombieId","type":"uint256"},
+				{"name":"name","type":"bytes"},
+				{"name":"dna","type":"uint256"}
+			],
+			"outputs": [
+			]
+		}
 	]
 }
