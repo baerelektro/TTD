@@ -15,7 +15,6 @@ contract ZombieFactory {
 
     Zombie[] public zombies;
 
-    //function _createZombie(string _name, uint _dna) private {
     function _createZombie(string _name, uint _dna) private {    
         //uint id = uint(zombies.push(Zombie(_name, _dna)) - 1);
         zombies.push(Zombie(_name, _dna));
@@ -30,7 +29,6 @@ contract ZombieFactory {
         return rand % dnaModulus;
     }
 
-    //function createRandomZombie(string _name) public {
     function createRandomZombie(string _name) public {
         uint randDna = _generateRandomDna(_name);
         _createZombie(_name, randDna);
