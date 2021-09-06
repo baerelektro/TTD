@@ -27,6 +27,35 @@ CALL $_createZombie_internal_macro$
 ;; param: _name
 ;; param: _dna
 ; function _createZombie
+; expValue
+;; fetch zombies
+GETGLOB 12
+; end expValue
+;; push identifier _name
+PUSH S2
+;; push identifier _dna
+PUSH S2
+TUPLE 2
+;; array.push(..)
+UNTUPLE 2
+NEWC
+PUSH S2
+STREFR
+PUSH S1
+STUR 256
+BLKDROP2 2, 1
+SWAP
+UNPAIR
+PUSH S1
+INC
+XCHG s3
+ROTREV
+PUSHINT 32
+DICTUSETB
+PAIR
+; colValue
+SETGLOB 12
+; end colValue
 ;; get member length
 ;; push identifier zombies
 GETGLOB 12
@@ -97,7 +126,7 @@ ENDS
 CALLREF {
 	CALL $createRandomZombie_internal_macro$
 }
-IFREF {
+CALLREF {
 	CALL $c7_to_c4$
 }
 TRUE
