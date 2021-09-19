@@ -1,5 +1,5 @@
-// pragma solidity ^0.4.19;
 pragma ton-solidity >= 0.35.0;
+pragma AbiHeader expire;
 
 contract ZombieFactory {
 
@@ -15,21 +15,24 @@ contract ZombieFactory {
 
     Zombie[] public zombies;
 
-    function _createZombie(string _name, uint _dna) private {    
-        //uint id = uint(zombies.push(Zombie(_name, _dna)) - 1);
+    mapping (uint => address) public zombieToOwner;
+    mapping (address => uint) ownerZombieCount;
+
+    function _createZombie(string _name, uint _dna) private { 
         zombies.push(Zombie(_name, _dna));
-        uint id = zombies.length;
-        //NewZombie(id, _name, _dna);
+        uint id = zombies.length-1;
+        zombieToOwner[id] = msg.sender;
+        ownerZombieCount[msg.sender]++;
         emit NewZombie(id, _name, _dna);
     }
 
     function _generateRandomDna(string _str) private view returns (uint) {
-        //uint rand = uint(keccak256(_str));
         uint rand = uint(sha256(_str));
         return rand % dnaModulus;
     }
 
     function createRandomZombie(string _name) public {
+        require(ownerZombieCount[msg.sender] == 0);
         uint randDna = _generateRandomDna(_name);
         _createZombie(_name, randDna);
     }
