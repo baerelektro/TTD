@@ -1,28 +1,34 @@
 # TTD - этап2
 
 ## roadmap
-Создать в github репозитории файл readme.md в этот файл, используя markdown выпишите свои выводы и структуру, которую вы поняли и сами для себя сформировали. 
 
-## Обучающая игра 
-https://cryptozombies.io/ru
+Создать в github репозитории файл readme.md в этот файл, используя markdown выпишите свои выводы и структуру, которую вы поняли и сами для себя сформировали.
 
-КриптоЗомби - интерактивная школа программирования. Это игра больше к эфиру, но там семантика схожа с той что у нас на фритон в компиляторе.. 
+## Обучающая игра
 
-## ссылки для облегчения учебы:
-https://telegra.ph/Links-08-28-58
+<https://cryptozombies.io/ru>
+
+КриптоЗомби - интерактивная школа программирования. Это игра больше к эфиру, но там семантика схожа с той что у нас на фритон в компиляторе..
+
+## ссылки для облегчения учебы
+
+<https://telegra.ph/Links-08-28-58>
 
 ## Практическое задание
-скомпилировать этот контракт: https://github.com/broxus/ton-contracts/blob/master/contracts/wallets/Account.sol и изучить его
 
-## Изучить это: 
- https://docs.ton.dev/86757ecb2/p/950f8a-write-smart-contract-in-solidity
+скомпилировать этот контракт: <https://github.com/broxus/ton-contracts/blob/master/contracts/wallets/Account.sol> и изучить его
+
+## Изучить это
+
+ <https://docs.ton.dev/86757ecb2/p/950f8a-write-smart-contract-in-solidity>
 
 ## Дополнительная информация по солидити, для подкрепления
-https://docs.soliditylang.org/en/latest/cheatsheet.html
 
-https://docs.soliditylang.org/en/latest/style-guide.html
+<https://docs.soliditylang.org/en/latest/cheatsheet.html>
 
-https://docs.soliditylang.org/en/latest/structure-of-a-contract.html
+<https://docs.soliditylang.org/en/latest/style-guide.html>
+
+<https://docs.soliditylang.org/en/latest/structure-of-a-contract.html>
 
 # Структура данных
 
@@ -34,7 +40,7 @@ https://docs.soliditylang.org/en/latest/structure-of-a-contract.html
 
 ## Хеш таблицы на основе объединения массивов и связанных списков
 
-позволяют создать префиксное дерево способое компактно хранить в памяти обьекты - например строки. Строки хранятся в массиве. 
+позволяют создать префиксное дерево способое компактно хранить в памяти обьекты - например строки. Строки хранятся в массиве.
 
 Работа с массивами строк, храняшимися в опеределюнной кодировке (big & little endian) в бинарном виде, в массивах, через адресацию памяти и битовые манипуляции создаёт битовый вектор.
 
@@ -58,9 +64,9 @@ https://docs.soliditylang.org/en/latest/structure-of-a-contract.html
 
 Алгоритмы (Сортировка и двоичный поиск)
 
-# Компилятoры 
+# Компилятoры
 
-https://docs.soliditylang.org/en/latest/grammar.html
+<https://docs.soliditylang.org/en/latest/grammar.html>
 
 Синтактический анализ
 
@@ -74,7 +80,7 @@ https://docs.soliditylang.org/en/latest/grammar.html
 
 # Типы Solidity
 
-https://docs.soliditylang.org/en/latest/types.html#value-types
+<https://docs.soliditylang.org/en/latest/types.html#value-types>
 
 Список типов значений поддерживаемых TVM:
 
@@ -105,7 +111,6 @@ Continuation - представляет собой «токен выполнен
 (т.е. указатели на функции и ссылки), адреса возврата подпрограмм,
 адреса указателей инструкций, адреса обработчиков исключений, замыкания,
 частичные приложения, анонимные функции и т. д.
-
 
 ## Булевыe (Логиiческий тип дaнных)
 
@@ -192,7 +197,7 @@ bytes, string
 
 Типы функций
 
-## Операторы:
+## Операторы
 
 Сравнения: <=, <, ==, !=, >=, >(вычисляться bool)
 
@@ -203,6 +208,3 @@ bytes, string
 Операторы сдвига: <<(сдвиг влево), >>(сдвиг вправо)
 
 Доступ к индексу: если x имеет тип bytesI, то x[k]for возвращает -й байт (только для чтения).0 <= k < Ik
-
-
-
