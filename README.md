@@ -14,6 +14,10 @@
 
 <https://telegra.ph/Links-08-28-58>
 
+<https://github.com/tonlabs/TON-Solidity-Compiler/tree/master/compiler/docs>
+
+<https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/compiler/docs/style-guide.rst>
+
 ## Практическое задание
 
 скомпилировать этот контракт: <https://github.com/broxus/ton-contracts/blob/master/contracts/wallets/Account.sol> и изучить его

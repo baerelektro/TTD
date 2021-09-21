@@ -278,7 +278,7 @@ Operators:
 ```
 
 Возвращает глубину TvmCell **c**. Если **c** не имеет ссылок, то **d** = 0;
-в противном случае **d** равно единице плюс максимальная глубина ячеек, указанная в **c**.
+в противном случае **d** равно единице плюс максимальная глубина cells, указанная в **c**.
 Если **c** - это Null вместо Cell, возвращается ноль.
 
 #### \<TvmCell\>.dataSize()
@@ -287,9 +287,9 @@ Operators:
 <TvmCell>.dataSize(uint n) returns (uint /*cells*/, uint /*bits*/, uint /*refs*/);
 ```
 
-Возвращает количество отдельных ячеек, битов данных в отдельных ячейках и
-ссылки на ячейки в отдельных ячейках. Если количество отдельных ячеек
-превышает `n+1`, то генерируется исключение переполнения ячейки (8).
+Возвращает количество отдельных cells, битов данных в отдельных cells и
+ссылки на cells в отдельных cells. Если количество отдельных cells
+превышает `n+1`, то генерируется исключение переполнения cell (8).
 Эта функция является оболочкой для кода операции "CDATASIZE" ([TVM][1] - A.11.7).
 
 #### \<TvmCell\>.dataSizeQ()
@@ -298,8 +298,8 @@ Operators:
 <TvmCell>.dataSizeQ(uint n) returns (optional(uint /*cells*/, uint /*bits*/, uint /*refs*/));
 ```
 
-Возвращает количество отдельных ячеек, битов данных в отдельных ячейках и
-ссылки на ячейки в отдельных ячейках. Если количество отдельных ячеек
+Возвращает количество отдельных cells, битов данных в отдельных cells и
+ссылки на cells в отдельных cells. Если количество отдельных cells
 превышает `n+1` тогда эта функция возвращает `optional` не имеющий значения.  
 Эта функция является оболочкой для кода операции "CDATASIZEQ" ([TVM][1] - A.11.7).
 
@@ -325,7 +325,7 @@ Operators:
 <TvmSlice>.empty() returns (bool);
 ```
 
-Проверяет, является ли `Slice` пустым (т.е. не содержит битов данных и ссылок на ячейки).
+Проверяет, является ли `Slice` пустым (т.е. не содержит битов данных и ссылок на cell).
 
 ##### \<TvmSlice\>.size()
 
@@ -341,12 +341,10 @@ Operators:
 <TvmSlice>.dataSize(uint n) returns (uint /*cells*/, uint /*bits*/, uint /*refs*/);
 ```
 
-Returns the count of distinct cells, data bits in the distinct cells and
-cell references in the distinct cells. If count of the distinct cells
-exceeds `n+1` then a cell overflow exception (8) is thrown.  
-Note that the returned `count of distinct cells` does not take into
-account the cell that contains the slice itself.  
-This function is a wrapper for opcode `SDATASIZE` ([TVM][1] - A.11.7).
+Возвращает количество отдельных cell, битов данных в отдельных ячейках и ссылок на cell в отдельных
+cell. Если количество отдельных cell превышает, `n+1`возникает исключение переполнения cell (8).
+Обратите внимание, что возвращаемое значение `count of distinct cells` не учитывает cell, содержащую сам slice.  
+Эта функция является оболочкой для кода операции `SDATASIZE` ([TVM][1] - A.11.7).
 
 #### \<TvmSlice\>.dataSizeQ()
 
@@ -354,12 +352,11 @@ This function is a wrapper for opcode `SDATASIZE` ([TVM][1] - A.11.7).
 <TvmSlice>.dataSize(uint n) returns (optional(uint /*cells*/, uint /*bits*/, uint /*refs*/));
 ```
 
-Returns the count of distinct cells, data bits in the distinct cells and
-cell references in the distinct cells. If count of the distinct cells
-exceeds `n+1` then this function returns an `optional` that has no value.
-Note that the returned `count of distinct cells` does not take into
-account the cell that contains the slice itself.  
-This function is a wrapper for opcode `SDATASIZEQ` ([TVM][1] - A.11.7).
+Возвращает количество отдельных cell, биты данных в отдельных ячейках и ссылки на ячейки в отдельных
+cellс. Если количество отдельных cell превышает, `n+1` эта функция возвращает значение `optional`
+tне имеющее значения. Обратите внимание, что возвращаемое значение `count of distinct cells` не учитывает
+cell, содержащую сам slice.
+Эта функция является оболочкой для кода операции  `SDATASIZEQ` ([TVM][1] - A.11.7).
 
 ##### \<TvmSlice\>.bits()
 
@@ -367,7 +364,7 @@ This function is a wrapper for opcode `SDATASIZEQ` ([TVM][1] - A.11.7).
 <TvmSlice>.bits() returns (uint16);
 ```
 
-Returns number of data bits in the slice.
+Возвращает количество битов данных в slice.
 
 ##### \<TvmSlice\>.refs()
 
@@ -375,7 +372,7 @@ Returns number of data bits in the slice.
 <TvmSlice>.refs() returns (uint8);
 ```
 
-Returns number of references in the slice.
+Возвращает количество ссылок в slice.
 
 ##### \<TvmSlice\>.bitsAndRefs()
 
@@ -383,7 +380,7 @@ Returns number of references in the slice.
 <TvmSlice>.bitsAndRefs() returns (uint16, uint8);
 ```
 
-Returns number of data bits and references in the slice.
+Возвращает количество битов данных и ссылок в slice.
 
 ##### \<TvmSlice\>.depth()
 
@@ -391,8 +388,8 @@ Returns number of data bits and references in the slice.
 <TvmSlice>.depth() returns (uint64);
 ```
 
-Returns the depth of the slice. If slice has no references, then 0 is returned,
-otherwise function result is one plus the maximum of depths of the cells referred to from the slice.
+Возвращает глубину slice. Если slice не имеет ссылок, возвращается 0, в противном случае
+результат функции равен единице плюс максимальная глубина ячеек, на которые ссылается срез.
 
 ##### \<TvmSlice\>.hasNBits(), \<TvmSlice\>.hasNRefs() and \<TvmSlice\>.hasNBitsAndRefs()
 
@@ -402,7 +399,7 @@ otherwise function result is one plus the maximum of depths of the cells referre
 <TvmSlice>.hasNBitsAndRefs(uint16 bits, uint8 refs) returns (bool);
 ```
 
-Checks whether the slice contains the specified amount of data bits and references.
+Проверяет, содержит ли фрагмент указанное количество битов данных и ссылок.
 
 ##### \<TvmSlice\>.compare()
 
@@ -410,7 +407,7 @@ Checks whether the slice contains the specified amount of data bits and referenc
 <TvmSlice>.compare(TvmSlice other) returns (int8);
 ```
 
-Lexicographically compares the `slice` and `other` data bits of the root slice and returns result as an integer:
+Лексикографически сравнивает биты данных `slice` и `other` данные корневого среза и возвращает результат в виде целого числа:
 
 * 1 - `slice` > `other`
 * 0 - `slice` == `other`
@@ -418,11 +415,10 @@ Lexicographically compares the `slice` and `other` data bits of the root slice a
 
 ##### TvmSlice load primitives
 
-All functions below modify the TvmSlice object they were called for and all of them work
-consistently. It means that if user wants to load second ref from the slice, he should
-load the first one with [\<TvmSlice\>.loadRef()](#tvmsliceloadref), [\<TvmSlice\>.loadRefAsSlice()](#tvmsliceloadrefasslice)
-or just skip it with [\<TvmSlice\>.skip()](#tvmsliceskip). The same rule is applied to
-data bits. To load bits from 2 to 10 positions, user should load or skip two bits at first.
+Все функции ниже изменяют объект TvmSlice, для которого они были вызваны, и все они работают согласованно. Это означает,
+что если пользователь хочет загрузить вторую ссылку из среза, он должен загрузить первую с помощью. [\<TvmSlice\>.loadRef()](#tvmsliceloadref),
+[\<TvmSlice\>.loadRefAsSlice()](#tvmsliceloadrefasslice) или просто пропустить его с помощью  [\<TvmSlice\>.skip()](#tvmsliceskip).
+То же правило применяется к битам данных. Чтобы загрузить биты от 2 до 10 позиций, пользователь должен сначала загрузить или пропустить два бита.
 
 ###### \<TvmSlice\>.decode()
 
@@ -430,10 +426,10 @@ data bits. To load bits from 2 to 10 positions, user should load or skip two bit
 <TvmSlice>.decode(TypeA, TypeB, ...) returns (TypeA /*a*/, TypeB /*b*/, ...);
 ```
 
-Supported types: `uintN`, `intN`, `bytesN`, `bool`, `ufixedMxN`, `fixedMxN`, `address`, `contract`,
+Поддерживаемые типы: `uintN`, `intN`, `bytesN`, `bool`, `ufixedMxN`, `fixedMxN`, `address`, `contract`,
 `TvmCell`, `bytes`, `string`, `mapping`, `ExtraCurrencyCollection`, `array`, `optional` and `struct`.
 
-Loads given types from the slice. Example:
+Загружает заданные типы из slice. Пример:
 
 ```TVMSolidity
 TvmSlice slice = ...;
@@ -449,7 +445,7 @@ See also: [\<TvmBuilder\>.store()](#tvmbuilderstore).
 <TvmSlice>.loadRef() returns (TvmCell);
 ```
 
-Loads a cell from the slice reference.
+Загружает cell из ссылки на slice.
 
 ###### \<TvmSlice\>.loadRefAsSlice()
 
@@ -457,7 +453,7 @@ Loads a cell from the slice reference.
 <TvmSlice>.loadRefAsSlice() returns (TvmSlice);
 ```
 
-Loads a cell from the slice reference and converts it into a slice.
+Загружает cell из ссылки на slice и преобразует ее в slice.
 
 ###### \<TvmSlice\>.loadSigned()
 
@@ -465,15 +461,15 @@ Loads a cell from the slice reference and converts it into a slice.
 <TvmSlice>.loadSigned(uint16 bitSize) returns (int);
 ```
 
-Loads a signed integer with the given **bitSize** from the slice.
+Загружает из slice среза целое число со знаком с заданным  **bitSize**.
 
 ###### \<TvmSlice\>.loadUnsigned()
 
 ```TVMSolidity
-<TvmSlice>.loadSigned(uint16 bitSize) returns (uint);
+<TvmSlice>.loadUnsigned(uint16 bitSize) returns (uint);
 ```
 
-Loads an unsigned integer with the given **bitSize** from the slice.
+Загружает из slice среза целое беззнаковое число со знаком с заданным  **bitSize**.
 
 ###### \<TvmSlice\>.loadTons()
 
@@ -481,7 +477,7 @@ Loads an unsigned integer with the given **bitSize** from the slice.
 <TvmSlice>.loadTons() returns (uint128);
 ```
 
-Loads (deserializes) **VarUInteger 16** and returns an unsigned 128-bit integer. See [TL-B scheme][3].
+Загружает (десериализует) **VarUInteger 16** и возвращает 128-битное целое число без знака. Смотри [TL-B scheme][3].
 
 ###### \<TvmSlice\>.loadSlice()
 
