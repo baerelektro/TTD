@@ -1,40 +1,48 @@
-pragma ton-solidity >= 0.35.0;
+pragma ton-solidity >= 0.50.0;
 pragma AbiHeader expire;
 
 contract ZombieFactory {
-
-    event NewZombie(uint zombieId, string name, uint dna);
-
-    uint dnaDigits = 16;
-    uint dnaModulus = 10 ** dnaDigits;
+    uint _dnaDigits = 16;
+    uint _dnaModulus = 10 ** _dnaDigits;
 
     struct Zombie {
         string name;
         uint dna;
     }
 
-    Zombie[] public zombies;
+    Zombie[] public _zombies;
 
-    mapping (uint => address) public zombieToOwner;
-    mapping (address => uint) ownerZombieCount;
-
-    function _createZombie(string _name, uint _dna) private { 
-        zombies.push(Zombie(_name, _dna));
-        uint id = zombies.length-1;
-        zombieToOwner[id] = msg.sender;
-        ownerZombieCount[msg.sender]++;
-        emit NewZombie(id, _name, _dna);
+    function _createZombie(string name, uint dna) private
+    {
+        _zombies.push(Zombie(name, dna));
     }
 
-    function _generateRandomDna(string _str) private view returns (uint) {
-        uint rand = uint(sha256(_str));
-        return rand % dnaModulus;
+    function _generateDna(string name) private view returns (uint)
+    {
+        uint hash = tvm.hash(name);
+        return hash % _dnaModulus;
     }
 
-    function createRandomZombie(string _name) public {
-        require(ownerZombieCount[msg.sender] == 0);
-        uint randDna = _generateRandomDna(_name);
-        _createZombie(_name, randDna);
+    function createZombie(string name) public returns (uint)
+    {
+        tvm.accept();
+        uint randDna = _generateDna(name);
+        _createZombie(name, randDna);
+        return _zombies.length - 1;
     }
 
+    function getZombieDna(uint id) public view returns (uint)
+    {
+        return _zombies[id].dna;
+    }
+
+    function getZombieName(uint id) public view returns (string)
+    {
+        return _zombies[id].name;
+    }
+
+    function zombieCount() public view returns (uint)
+    {
+        return _zombies.length;
+    }
 }
