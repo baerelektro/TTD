@@ -16,6 +16,10 @@ npm install -g tondev
 
 tondev sol update
 
+tondev sol version
+
+tondev sol set --compiler 0.50.0 --linker 0.13.66 --stdlib 0.50.0
+
 tondev network default se
 
 tondev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
