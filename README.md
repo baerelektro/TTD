@@ -3,35 +3,54 @@
 Создать фронт с помощью этого тутариала 
 https://nodeschool.io/#workshopper-list
 
-Разобраться с флагами.
+## Разобраться с флагами.
 описания флагов есть тут https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/API.md#addresstransfer
 
 
 Создание и деплой контракта ZombieFactory.sol чтобы применить на практике урок https://cryptozombies.io/ru/lesson/1 
 
-Подготовить среду установив Node.js
+ ## Подготовить среду установив Node.js
+
 
 npm install -g tondev
+
 tondev sol update
+
 tondev network default se
+
 tondev signer add giver_keys 172af540e43a524763dd53b26a066d472a97c4de37d5498170564510608250c3
+
 tondev network giver se 0:b5e9240fc2d2f1ff8cbb1d1dee7fb7cae155e5f6320e585fcc685698994a19a5 --signer giver_keys
+
 tondev signer generate owner_keys
+
 tondev signer default owner_keys
 
-взять или пересоздать контракт ZombieFactory.sol
- (https://t.me/FreeTONvoicechat/2962)tondev sol compile ZombieFactory.sol
+
+## взять или пересоздать контракт ZombieFactory.sol
+
+
+tondev sol compile ZombieFactory.sol
+ 
 tondev se start
+
 tondev contract deploy ZombieFactory --value 1000000000
-запись в контракт:
+
+## запись в контракт:
+
 tondev contract run ZombieFactory
+
  — имеет смыл только createZombie
+ 
 чтение контракта:
+
 tondev contract run-local ZombieFactory zombieCount
+
 tondev contract run-local ZombieFactory getZombieDna
+
 tondev contract run-local ZombieFactory getZombieName
 
-Ссылки:
+## Ссылки:
 
 https://hackmd.io/LLwxyC0rRYOJ9ZXptAzKxA?view
 
