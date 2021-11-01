@@ -43,6 +43,11 @@ https://github.com/tonlabs/tonos-se/blob/9466178c356180577c0408882d32e1f3c1c34be
 https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/API.md#pragma-abiheader
 https://docs.ton.dev/86757ecb2/p/88321a-message-expiration
 
+@renatSK
+
+Есть всякие highload контракты которые записывают запросы в свой сторедж и отсекают дубликаты, они понятно более дорогие по газу, но позволяют работать со смартконтрактом в паралель.  https://docs.ton.dev/86757ecb2/p/55f73e-security
+
+
 
 ## Создать фронт с помощью этого туториала 
 https://nodeschool.io/#workshopper-list
