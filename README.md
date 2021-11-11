@@ -190,6 +190,8 @@ https://www.youtube.com/watch?v=ngD88UraMmU&list=PLPj4C8ti8UaSPAP6afsy0wQ53lihBT
 
 # Компилятoры
 
+<https://github.com/tonlabs/TON-Solidity-Compiler/blob/master/API.md>
+
 <https://docs.soliditylang.org/en/latest/grammar.html>
 
 Синтактический анализ
